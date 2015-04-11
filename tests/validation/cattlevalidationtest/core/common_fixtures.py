@@ -31,6 +31,10 @@ SSH_IMAGE_UUID_HOSTNET = "docker:sangeetha/testclient33:latest"
 
 DEFAULT_TIMEOUT = 45
 
+ADMIN_HEADERS = dict(gdapi.HEADERS)
+ADMIN_HEADERS['X-API-Project-Id'] = 'USER'
+
+
 PRIVATE_KEY_FILENAME = "/tmp/private_key_host_ssh"
 HOST_SSH_TEST_ACCOUNT = "ranchertest"
 HOST_SSH_PUBLIC_PORT = 2222
@@ -129,6 +133,40 @@ def client_for_project(project):
                     cache=False,
                     access_key=access_key,
                     secret_key=secret_key)
+
+
+def acc_id(client):
+    obj = client.list_api_key()[0]
+    return obj.account().id
+
+
+def client_for_project(project):
+    access_key = random_str()
+    secret_key = random_str()
+    admin_client = _admin_client()
+    active_cred = None
+    account = project
+    for cred in account.credentials():
+        if cred.kind == 'apiKey' and cred.publicValue == access_key\
+                and cred.secretValue == secret_key:
+            active_cred = cred
+            break
+
+    if active_cred is None:
+        active_cred = admin_client.create_api_key({
+            'accountId': account.id,
+            'publicValue': access_key,
+            'secretValue': secret_key
+        })
+
+    active_cred = wait_success(admin_client, active_cred)
+    if active_cred.state != 'active':
+        wait_success(admin_client, active_cred.activate())
+
+    return from_env(url=cattle_url(),
+                       cache=False,
+                       access_key=access_key,
+                       secret_key=secret_key)
 
 
 def wait_success(client, obj, timeout=DEFAULT_TIMEOUT):
