@@ -349,12 +349,3 @@ def test_github_id_name(github_client, config, cattle_url, request,
     assert len(members) == 2
     diff_members(members, sent_members)
 
-
-@if_github
-def test_cant_delete_deactivate_default_project():
-    assert False
-
-
-@if_github
-def test_get_forbidden_if_no_default():
-    assert False
