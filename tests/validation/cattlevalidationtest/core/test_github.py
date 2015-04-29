@@ -233,7 +233,8 @@ def test_github_auth_config_valid_user(github_client, github_request_token,
     assert schemas.status_code == 200
 
 
-@pytest.mark.skipif(True)
+@pytest.mark.skipif(True, reason="Can't create githubconfigs with users o"
+                                 "r orgs in tests right now.")
 def test_github_auth_config_api_whitelist_users(admin_client, github_client,
                                                 config):
     github_client.create_githubconfig(allowedUsers=[
@@ -253,7 +254,8 @@ def test_github_auth_config_api_whitelist_users(admin_client, github_client,
     assert 'ranchertest02' in users
 
 
-@pytest.mark.skipif(True)
+@pytest.mark.skipif(True, reason="Can't create githubconfigs with users o"
+                                 "r orgs in tests right now.")
 def test_github_auth_config_api_whitelist_orgs(admin_client, request,
                                                github_client, config):
     switch_on_auth(admin_client, request, config)
@@ -269,7 +271,8 @@ def test_github_auth_config_api_whitelist_orgs(admin_client, request,
     assert 'rancherio' in orgs
 
 
-@pytest.mark.skipif(True)
+@pytest.mark.skipif(True, reason="Can't create githubconfigs with users o"
+                                 "r orgs in tests right now.")
 def test_github_add_whitelisted_user(admin_client, config, request,
                                      github_client):
     switch_on_auth(admin_client, request, config)
@@ -290,7 +293,8 @@ def test_github_add_whitelisted_user(admin_client, config, request,
     assert new_token is not None
 
 
-@pytest.mark.skipif(True)
+@pytest.mark.skipif(True, reason="Can't create githubconfigs with users o"
+                                 "r orgs in tests right now.")
 def test_github_projects(github_client, cattle_url, config, request,
                          admin_client):
     user_client = from_env(url=cattle_url)
