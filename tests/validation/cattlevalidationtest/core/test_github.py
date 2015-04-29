@@ -2,8 +2,6 @@ from common_fixtures import *  # NOQA
 from selenium import webdriver
 from selenium.webdriver.phantomjs.service import Service as PhantomJSService
 from requests.auth import AuthBase
-from time import sleep
-
 # test the github auth workflow
 USER_SCOPE = 'github_user'
 TEAM_SCOPE = 'github_team'
@@ -189,6 +187,7 @@ def switch_on_auth(admin_client, request, config):
     admin_client.create_githubconfig(enabled=True, accessMode='restricted',
                                      clientId=config['client_id'],
                                      clientSecret=config['client_secret'])
+
     def fin():
         admin_client.create_githubconfig(enabled=False)
 
@@ -352,4 +351,3 @@ def test_github_id_name(github_client, config, cattle_url, request,
     members = get_plain_members(project.projectMembers())
     assert len(members) == 2
     diff_members(members, sent_members)
-
